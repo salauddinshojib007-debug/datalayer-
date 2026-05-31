@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hands-On Tracking Sandbox</title>
+  
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f3; padding: 50px; display: flex; justify-content: center; }
+    .form-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+    h2 { margin-top: 0; color: #333; font-size: 24px; }
+    p { color: #666; font-size: 14px; margin-bottom: 24px; }
+    label { font-weight: 600; font-size: 14px; color: #444; }
+    input { width: 100%; padding: 12px; margin: 8px 0 16px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+    button { background: #2563eb; color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; font-weight: 600; }
+    button:hover { background: #1d4ed8; }
+    .error-msg { color: #dc2626; font-size: 14px; margin-bottom: 12px; display: none; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <div class="form-card">
+    <h2>Join the Newsletter</h2>
+    <p>Location: <strong>Homepage Footer</strong></p>
+    
+    <div id="errorAlert" class="error-msg">⚠️ Please enter a valid email address!</div>
+
+    <label for="emailInput">Email Address</label>
+    <input type="email" id="emailInput" placeholder="you@example.com">
+    
+    <button onclick="handleFormSubmission()">Subscribe Now</button>
+  </div>
+
+  <script>
+    // This function runs the moment someone clicks the "Subscribe Now" button
+    function handleFormSubmission() {
+      const emailValue = document.getElementById('emailInput').value;
+      const errorAlert = document.getElementById('errorAlert');
+
+      // 1. Check if the user input actually looks like a basic email (contains '@')
+      if (!emailValue.includes('@')) {
+        
+        // ❌ FAILURE CASE: Show the error message and STOP running the code.
+        errorAlert.style.display = 'block';
+        console.log("Tracking Log: Form invalid. dataLayer.push BLOCKED.");
+        return; // This exits the function completely.
+      }
+
+      // 🟩 SUCCESS CASE: If the code gets here, the email passed validation!
+      errorAlert.style.display = 'none'; // Hide any previous error messages
+      alert("🎉 Success! You have been subscribed.");
+
+      // 👇 THIS IS THE EXACT MOMENT YOU ENTER THE DATALAYER PUSH 👇
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'formSubmission',
+        'formType': 'Newsletter Subscription',
+        'formPosition': 'Homepage Footer'
+      });
+
+      console.log("Tracking Log: dataLayer.push SENT successfully!", window.dataLayer);
+      
+      // Optional: Clear out the input field after successful submission
+      document.getElementById('emailInput').value = '';
+    }
+  </script>
+
+</body>
+</html>
